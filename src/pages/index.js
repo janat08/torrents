@@ -3,38 +3,38 @@ import { sortBy } from 'lodash'
 
 import Layout from "../components/layout"
 import { Router, navigate, Location } from "@reach/router"
-import { Message, Input, Button, Table, Segment } from 'semantic-ui-react'
+import { Message, Input, Button, Table, Segment, Icon } from 'semantic-ui-react'
 import axios from 'axios'
 import xbytes from 'xbytes'
-// import MockAdapter from 'axios-mock-adapter'
+import MockAdapter from 'axios-mock-adapter'
 
-// var mock = new MockAdapter(axios);
-// const stub = [
-//         {
-//         title: "title3",
-//         seeds: 3,
-//         size: "1000mb",
-//         torrent: "fddsfd",
-//         magnet: "asdf"
-//     },
-//     {
-//         title: "title",
-//         seeds: 1,
-//         size: "1000mb",
-//         torrent: "fddsfd",
-//         magnet: "asdf"
-//     }, {
-//         title: "title1",
-//         seeds: 2,
-//         size: "1000mb",
-//         torrent: "fddsfd",
-//         magnet: "asdf"
-//     },
-// ]
-// mock.onGet(new RegExp("/torrents/*")).reply(200, {
-//     torrents: stub
-// }
-// );
+var mock = new MockAdapter(axios);
+const stub = [
+        {
+        title: "title3",
+        seeds: 3,
+        size: "1000mb",
+        torrent: "fddsfd",
+        magnet: "asdf"
+    },
+    {
+        title: "title",
+        seeds: 1,
+        size: "1000mb",
+        torrent: "fddsfd",
+        magnet: "asdf"
+    }, {
+        title: "title1",
+        seeds: 2,
+        size: "1000mb",
+        torrent: "fddsfd",
+        magnet: "asdf"
+    },
+]
+mock.onGet(new RegExp("/torrents/*")).reply(200, {
+    torrents: stub
+}
+);
 const log = console.log
 
 
@@ -66,20 +66,20 @@ function hasLoaded(number) {
 }
 
 const isLoading = (<Message icon info size='mini'>
-    {/* <Icon name='circle notched' loading /> */}
+    <Icon name='circle notched' loading />
     <Message.Content>
         <Message.Header>Loading</Message.Header>
     </Message.Content>
 </Message>)
 
 const isNothing = (<Message icon warning size='mini'>
-    {/* <Icon name='undo' /> */}
+    <Icon name='undo' />
     <Message.Content>
         <Message.Header>Nothing Found</Message.Header>
     </Message.Content>
 </Message>)
 const isError = (<Message icon negative size='mini'>
-    {/* <Icon name='x' /> */}
+    <Icon name='x' />
     <Message.Content>
         <Message.Header>Error</Message.Header>
     </Message.Content>
@@ -175,8 +175,8 @@ class IndexPage extends React.Component {
         navigate("/search/" + this.state.input)
     }
     render() {
-        const query = this.props.query
-        // const props.location.state.input
+        const {location} = this.props
+        const renderSearchInput = location.pathname.indexOf("search") == -1
         const { loading, results, error, nothing, column, direction, input } = this.state
         const { hInput, hSubmit, searchBegin } = this
         const empty = !results.length
@@ -202,9 +202,9 @@ class IndexPage extends React.Component {
         }
         return (
             <Layout>
-                <Segment>
+                {renderSearchInput && <Segment>
                     <Input onChange={hInput} value={input} onKeyPress={hSubmit} fluid loading={inputLoading} icon={searchIcon} iconPosition='left' action={<Button onClick={searchBegin}>Search</Button>} placeholder='Search torrents' />
-                </Segment>
+                </Segment>}
                 {message}
                 {!nothing && <Table striped compact sortable>
                     <Table.Header>
